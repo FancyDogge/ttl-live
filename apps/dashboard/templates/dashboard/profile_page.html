@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {{user.username}}'s profile
+{% endblock title %}
+    
+
+{% block content %}
+    <div class="profile-wrapper">
+        <div class="profile-card">
+            <h3>Your Info</h3>
+            <p>Username: <span>{{user.username}}</span></p>
+            <p>Email: <span>{{user.email}}</span></p>
+            <p>Joined: <span>{{user.date_joined}}</span></p>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <img src="{{ form.avatar.url }}" />
+                <a class="btn btn-secondary" href="{% url 'tasks' %}">Back to Tasks</a>
+                <input class="btn btn-warning" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+    

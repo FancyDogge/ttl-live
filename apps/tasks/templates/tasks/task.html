@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+<div class="row d-flex justify-content-center container">
+  <div class="col-md-8">
+    <div class="card-hover-shadow-2x mb-3 card">
+      <div class="card-header-tab card-header d-flex justify-content-between">
+        <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="fa fa-tasks"></i>&nbsp;{{ task.name }}</div>
+        <div class="user-div">
+          <a href="{% url 'dashboard' %}">{{ request.user.username }}</a>
+        </div>    
+      </div>
+      <div class="w-container task-description">
+        <!-- <h4>{{ task.name }}</h4> -->
+        <p><span class="task-span">Description: </span>{{ task.description }}</p>
+        <p><span class="task-span">Status: </span>{{ task.status }}</p>
+        <p><span class="task-span">Date Created: </span>{{ task.created_at }}</p>
+        {% if task.deadline is None %}
+          <p><span class="task-span">Deadline: </span>No Deadline</p>
+        {% else %}
+          <p><span class="task-span">Deadline: </span>{{ task.deadline }}</p>
+        {% endif %}
+      </div>
+      <div class="d-block text-right card-footer">
+        <a class="btn btn-secondary" href="{% url 'tasks' %}">Back to Tasks</a>
+        <a class='btn btn-warning' href="{% url 'change_task' task.id %}">Change Task</a>
+        <a class='btn btn-danger' href="{% url 'delete_task' task.id %}">Delete Task</a>
+      </div> 
+    </div>
+  </div>
+</div>
+{% endblock content %}
+  

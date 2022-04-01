@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Denchik&#x27;s Stupendous Site</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" type="text/css" href="{% static 'core/style.css' %}">
+  </head>
+  <body>
+    <header class="nav-bar wf-section">
+      <div class="w-container">
+        <div class="w-row">
+          <div class="brand-column w-col w-col-4">
+            <img
+              src="https://uploads-ssl.webflow.com/61f29eacf7957e0b43fbffee/61f29eadf7957e5848fc000f_1-logo.png"
+              width="41px"
+              alt=""
+              class="logo"
+            />
+            <div class="company">TaskTracker</div>
+          </div>
+          <nav class="nav-column w-col w-col-8">
+            <a href="#" class="nav-link">Mobile</a
+            ><a href="#" class="nav-link">Features</a
+            ><a href="#" target="_self" class="nav-link sign-up">Sign Up</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+    <div class="section hero wf-section">
+      <div class="w-container">
+        <h1 class="hero-heading">Keep Track of Most Important</h1>
+        <p class="hero-subhead">
+          Stop waising your time. Start to use it wisely.
+        </p>
+        <div class="button-group">
+          <a href="#" class="button sign-up">Sign up</a
+          ><a href="#" class="button">Log In</a>
+        </div>
+        <img
+          src="https://uploads-ssl.webflow.com/61f29eacf7957e0b43fbffee/61f29eadf7957e9122fc0012_2-big-screen.png"
+          width="940"
+          sizes="(max-width: 479px) 94vw, (max-width: 767px) 95vw, (max-width: 991px) 728px, 940px"
+          srcset="
+            https://uploads-ssl.webflow.com/61f29eacf7957e0b43fbffee/61f29eadf7957e9122fc0012_2-big-screen-p-500x235.png   500w,
+            https://uploads-ssl.webflow.com/61f29eacf7957e0b43fbffee/61f29eadf7957e9122fc0012_2-big-screen-p-800x376.png   800w,
+            https://uploads-ssl.webflow.com/61f29eacf7957e0b43fbffee/61f29eadf7957e9122fc0012_2-big-screen-p-1080x507.png 1080w,
+            https://uploads-ssl.webflow.com/61f29eacf7957e0b43fbffee/61f29eadf7957e9122fc0012_2-big-screen.png            1880w
+          "
+          alt=""
+        />
+      </div>
+    </div>
+    <div class="section-2 wf-section">
+      <div class="text-block">© Copyright Daniil Nosov</div>
+    </div>
+  </body>
+</html>

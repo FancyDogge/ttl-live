@@ -1,0 +1,123 @@
+{% extends 'core/base.html' %}
+
+
+
+{% block title %}
+   Tasks 
+{% endblock title %}
+    
+
+{% block content %}
+<!-- tasks -->
+<div class="content-wrapper container">
+    <div class="col-md-8">
+        <div class="card-hover-shadow-2x mb-3 card">
+            <div class="card-header-tab card-header d-flex justify-content-between">
+                <div class="card-header-title font-size-lg text-capitalize font-weight-normal"><i class="fa fa-tasks"></i>&nbsp;Task Lists</div>
+                <div class="user-div">
+                        <a class="profile-pic-wrapper" href="{% url 'userprofile' %}"><img class="profile-pic" src="{{ request.user.userprofile.avatar.url }}" alt=""></a>
+                        <a href="{% url 'userprofile' %}">{{ request.user.username }} <a class="logout" href="{% url 'logout' %}">logout</a></a>
+                </div>   
+            </div>
+            <div class="scroll-area-sm">
+                <perfect-scrollbar class="ps-show-limits">
+                    <div style="position: static;" class="ps ps--active-y">
+                        <div class="ps-content">
+                            <ul class=" list-group list-group-flush">
+                                
+                                {% for task in tasks %}
+                                    {% if task.status != 'Done' and task.status != 'Paused' %}
+                                        <li class="list-group-item">
+                                            <div class="todo-indicator bg-warning"></div>
+                                            <div class="widget-content p-0">
+                                                <div class="widget-content-wrapper">
+                                                    <div class="widget-content-left">
+                                                        <div class="widget-heading"><a href="{% url 'task' task.id %}">{{ task.name }}</a><div class="badge
+                                                            
+                                                            {% if task.status == 'Deadline Soon' %}
+                                                            badge-warning
+                                                            {% elif task.status == 'Overdue' %}
+                                                            badge-danger 
+                                                            {% else %}
+                                                            badge-success
+                                                            {% endif %}
+                                                                
+                                                            ml-2">{{ task.status }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="widget-content-right">
+                                                        
+                                                        {% if task.deadline is None %}
+                                                            <div class="">No Deadline</div>
+                                                        {% else %}
+                                                            <div class="">{{task.deadline}}</div>
+                                                        {% endif %}
+                                                                                                            
+                                                        <a href="{% url 'complete_task' task.id %}" class="border-0 btn-transition btn btn-outline-success"> <i class="fa fa-check"></i></a> 
+                                                        <a href="{% url 'delete_task' task.id %}" class="border-0 btn-transition btn btn-outline-danger"> <i class="fa fa-trash"></i> </a> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                    
+                            </ul>
+                        </div>
+                    </div>
+                </perfect-scrollbar>
+            </div>
+            <div class="d-block text-right card-footer"><a href="{% url 'create_task' %}" class="btn btn-warning">Add Task</a></div>
+        </div>
+    </div>
+    <div class="widgets-wrapper">
+
+        <div class="widgets-box">
+            <!-- Weather -->
+            <div class="weather-wrapper">
+                <div class="weather-card weather-container">
+                        <div class="temp-box">
+                            <div class="weather-icon"><img src="{{ icon_url }}" alt=""></div>
+                            <div class="">
+                                <div class="temp" style="display: inline-block;">{{ temperature }}</div>
+                                <div class="temp" style="display: inline-block;">°C</div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="feelslike">Feels like: {{ feels_like }}°C</div>
+                            <div class="wind">Wind: {{ wind }}ms</div>
+                        </div>
+                        <div class="city">{{ country_and_city }}</div>
+                </div>
+            </div>
+
+            <div class="gifka">
+                <img style="max-width: 215px; max-height: 200px; border-radius: 20px;" src="" alt="asd">
+            </div>
+    
+            <!-- EUR USD RUB BITCOIN -->
+            <div class="weather-wrapper">
+                <div class="price-card">
+                        <div class="price-container">
+                            <div class="eur-pic"><img src="https://img.icons8.com/external-icongeek26-linear-colour-icongeek26/64/000000/external-euro-ecommerce-icongeek26-linear-colour-icongeek26.png"/></div>
+                            <div class="price">{{ eur_rub }} RUB</div>
+                        </div>
+                        <div class="price-container">
+                            <div class="usd-pic"><img src="https://img.icons8.com/external-icongeek26-linear-colour-icongeek26/64/000000/external-dollar-ecommerce-icongeek26-linear-colour-icongeek26.png"/></div>
+                            <div class="price">{{ usd_rub }} RUB</div>
+                        </div>
+                        <div class="price-container">
+                            <div class="btc-pic"><img src="https://img.icons8.com/color/48/000000/bitcoin--v1.png"/></div>
+                            <div class="price">{{ bitcoin_price }} USD</div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+</div>
+
+
+
+{% endblock content %}
+    
