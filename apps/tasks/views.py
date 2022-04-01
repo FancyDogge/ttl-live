@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from tasks.models import Task
 from django.contrib import messages
 from tasks.forms import TaskForm, ChangeTaskForm
-from django_q.tasks import async_task, schedule
+from django_q.tasks import schedule
 from django_q.models import Schedule
 from django.db.models import F
 from .external_APIs import *
