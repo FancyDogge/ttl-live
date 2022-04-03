@@ -166,25 +166,12 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 #-------DJANGO-Q-ASYNC-TASKS------
 Q_CLUSTER = {
-    'name': 'MyTaskTracker',
-    'workers': 8,
-    'recycle': 500,
-    'timeout': 60,
-    'compress': True,
-    'save_limit': 250,
-    'queue_limit': 500,
-    'cpu_affinity': 4,
-    'label': 'Django Q',
-    'redis': {
-        'host': 'ec2-63-32-248-14.eu-west-1.compute.amazonaws.com',
-        'password': '723105559061510b71d41721bf9796aa4581aa3f4b28190235ccef0308d17a60',
-        'port': 5432,
-        'db': 0,
-        'password': None,
-        'socket_timeout': None,
-        'charset': 'utf-8',
-        'errors': 'strict',
-        'unix_socket_path': None
-    }
+    'name': 'DjangORM',
+    'workers': 4,
+    'timeout': 90,
+    'retry': 120,
+    'queue_limit': 50,
+    'bulk': 10,
+    'orm': 'default'
 }
 
