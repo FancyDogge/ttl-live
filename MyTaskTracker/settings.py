@@ -166,8 +166,8 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 #-------DJANGO-Q-ASYNC-TASKS------
 Q_CLUSTER = {
-    'name': 'DjangORM',
-    'workers': 4,
+    'name': 'MyTaskTracker',
+    'workers': 1,
     'timeout': 90,
     'retry': 120,
     'queue_limit': 50,
