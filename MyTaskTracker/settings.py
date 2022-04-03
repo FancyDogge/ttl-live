@@ -166,7 +166,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 #-------DJANGO-Q-ASYNC-TASKS------
 Q_CLUSTER = {
-    'name': 'My-Task-Tracker',
+    'name': 'MyTaskTracker',
     'workers': 8,
     'recycle': 500,
     'timeout': 60,
@@ -176,8 +176,9 @@ Q_CLUSTER = {
     'cpu_affinity': 4,
     'label': 'Django Q',
     'redis': {
-        'host': 'localhost',
-        'port': 6379,
+        'host': 'ec2-63-32-248-14.eu-west-1.compute.amazonaws.com',
+        'password': '723105559061510b71d41721bf9796aa4581aa3f4b28190235ccef0308d17a60',
+        'port': 5432,
         'db': 0,
         'password': None,
         'socket_timeout': None,
