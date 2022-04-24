@@ -2,7 +2,7 @@ from django.shortcuts import  render, redirect
 from .forms import RegisterForm, AuthenticationForm
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
-from core.models import Userprofile
+from dashboard.models import Userprofile
 from django.core.mail import send_mail
 
 
@@ -29,6 +29,7 @@ def register_user(request):
 	#я вот не знаю точно, нужно ли уточнять тип реквеста if request.method == "POST":
 	#раньше писал, но вроде и без этого работает, если добавлять "or None"
 	if request.user.is_authenticated:
+		messages.error(request, 'You are already logged in!')
 		return redirect('tasks')
 	form = RegisterForm(request.POST or None)
 	if form.is_valid():

@@ -1,4 +1,5 @@
 from datetime import timedelta
+from django.http import HttpRequest
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -26,7 +27,7 @@ def deadline_mail(request,task):
 #-------Отобразить все task--------
 @login_required
 def view_tasks(request):
-    #F класс помогает сортануть query,т.к есть метод, сортирующий нулевые позицие в конец 
+    #F класс помогает сортануть query,т.к в нем есть метод, сортирующий нулевые позиции в конец 
     tasks = Task.objects.filter(created_by=request.user.id).order_by(F('deadline').desc(nulls_last=True))
 
     for task in tasks:
@@ -39,19 +40,32 @@ def view_tasks(request):
                     task.status = task.TaskCurrentStatus.DEADLINE
                     task.save()
 
+    #for production,else you need to use your local machine adress
+    users_ip = request.META.get('REMOTE_ADDR')
 
-    all_weather_info = weather_api_call()
-    temperature = all_weather_info['temperature']
-    feels_like = all_weather_info['feels like']
-    wind = all_weather_info['wind']
-    country_and_city = all_weather_info['country and city']
-    icon_url = all_weather_info['icon_url']
+    all_weather_info = weather_api_call(users_ip)
+    if type(all_weather_info) is not dict:
+    #if 'temperature' in weather_api_call():
+        temperature = None
+        feels_like = None
+        wind = None
+        country_and_city = None
+        icon_url = None
+    else:
+        temperature = all_weather_info['temperature']
+        feels_like = all_weather_info['feels like']
+        wind = all_weather_info['wind']
+        country_and_city = all_weather_info['country and city']
+        icon_url = all_weather_info['icon_url']
+        
 
     currency_excgange = get_rubusd_rate()
     usd_rub = currency_excgange[0]
     eur_rub = currency_excgange[1]
 
     bitcoin_price = get_bitcoin_price()
+
+    cat_img = get_cat_img()
 
     context = {
         'tasks': tasks,
@@ -62,7 +76,8 @@ def view_tasks(request):
         'wind': wind,
         'country_and_city': country_and_city,
         'icon_url': icon_url,
-        'bitcoin_price': bitcoin_price
+        'bitcoin_price': bitcoin_price,
+        'cat_img': cat_img,
     }
     return render(request, 'tasks/tasks.html', context)
 
@@ -108,11 +123,11 @@ def change_task(request, pk):
         form.initial['description'] = task.description
         form.initial['status'] = task.status
         form.initial['deadline'] = task.deadline
-
-        if form.is_valid():
-            form.save() 
-            messages.success(request, 'Task was successfully changed!')
-            return redirect('task', pk = task.pk)
+        if request.method == "POST":
+            if form.is_valid():
+                form.save() 
+                messages.success(request, 'Task was successfully changed!')
+                return redirect('task', pk = task.pk)
 
         return render(request, 'tasks/create_task.html', {'form':form})
     else:

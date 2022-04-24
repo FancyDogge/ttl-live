@@ -103,12 +103,6 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'my_cache_table',
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -170,10 +164,9 @@ EMAIL_HOST_PASSWORD = 'noaqsbblivtwwbrq'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-#-------DJANGO-Q-ASYNC-TASKS------
+#-------DJANGO-Q-SETTINGS------
 Q_CLUSTER = {
     'name': 'MyTaskTracker',
-    'workers': 4,
     'timeout': 90,
     'retry': 120,
     'queue_limit': 50,

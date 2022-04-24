@@ -1,7 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from core.models import Userprofile
+from dashboard.models import Userprofile
 from django.contrib import messages
 from .forms import UpdateAvatar
 
@@ -39,6 +39,7 @@ def userprofile(request):
             user_profile.avatar = request.FILES['avatar']
             user_profile.save()
             messages.success(request, "Your profile picture was successfully updated!")
+            return redirect('userprofile')
 
 
     return render(request, 'dashboard/profile_page.html', {'user':user, 'form':form})

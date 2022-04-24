@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from core.models import Userprofile
+from dashboard.models import Userprofile
 
 
 class UpdateAvatar(ModelForm):
