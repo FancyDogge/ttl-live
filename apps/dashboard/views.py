@@ -5,7 +5,8 @@ from dashboard.models import Userprofile
 from django.contrib import messages
 from .forms import UpdateAvatar
 
-# Create your views here.
+
+#-------Дэшбоард------
 @login_required
 def dashboard_view(request):
     user = request.user
@@ -13,7 +14,7 @@ def dashboard_view(request):
     comptleted_tasks = user.tasks.filter(status='Done').order_by('-created_at')
     paused_tasks = user.tasks.filter(status='Paused').order_by('-created_at')
 
-    closest_deadline = user.tasks.all().order_by('-deadline')[:3]
+    closest_deadline = user.tasks.filter(status='Active').order_by('deadline')
     
     context = {
         'username': user.username,
@@ -25,6 +26,7 @@ def dashboard_view(request):
     return render(request, 'dashboard/dashboard.html', context)
 
 
+#-------Профиль------
 @login_required
 def userprofile(request):
     user = get_object_or_404(User, id=request.user.id)

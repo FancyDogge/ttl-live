@@ -17,7 +17,7 @@ import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-#добавляю папку apps вв путь python
+#добавляет папку apps в путь python
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 
@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-*z=f*cev*k!rz(g7z9_m3m*%%6%^0box%9sey+5^l520_b-h(q
 DEBUG = True
 
 #heroku and localhost
-ALLOWED_HOSTS = ['ttl-nosov.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -94,12 +94,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'TTL_database',
-        # 'USER': 'postgres',
-        # 'PASSWORD': 'Dru1dsareawesome',
-        # 'HOST': 'localhost',
-        # 'PORT': '5432',
     }
 }
 
@@ -141,28 +135,33 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 #-------Media-----------
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
 
 #-------Login and redirects------
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'tasks'
 LOGOUT_REDIRECT_URL = 'login'
 
-#-------Mail Stuff-------
+
+#-------Mail Settings-------
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER ='djnagotestmailkek@gmail.com'
+EMAIL_HOST_USER ='****@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = 'noaqsbblivtwwbrq'
+EMAIL_HOST_PASSWORD = '****'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 #-------DJANGO-Q-SETTINGS------
 Q_CLUSTER = {

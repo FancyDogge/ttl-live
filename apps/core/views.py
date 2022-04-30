@@ -2,11 +2,12 @@ from django.shortcuts import  render, redirect
 from .forms import RegisterForm, AuthenticationForm
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
+from django.contrib.auth.models import User
 from dashboard.models import Userprofile
 from django.core.mail import send_mail
 
 
-#-------Email при создании. изменении и удалении task-----
+#-------Email при регистрации и логине------
 def send_registration_email(user):
 
     send_mail(
@@ -25,9 +26,9 @@ def login_email(user):
     recipient_list = [f'{user.email}'],
     )
 
+
+#-------Регистрация------
 def register_user(request):
-	#я вот не знаю точно, нужно ли уточнять тип реквеста if request.method == "POST":
-	#раньше писал, но вроде и без этого работает, если добавлять "or None"
 	if request.user.is_authenticated:
 		messages.error(request, 'You are already logged in!')
 		return redirect('tasks')
@@ -50,6 +51,7 @@ def register_user(request):
 	return render(request, 'core/registration.html', {'form':form})
 
 
+#-------Логин------
 def login_user(request):
 	if request.user.is_authenticated:
 		return redirect('tasks')
@@ -67,6 +69,16 @@ def login_user(request):
 				messages.info(request, 'Username OR password is incorrect')
 
 	return render(request, 'core/login.html', {'form':form})
+
+
+#-------Логин как демо юзер------
+def login_demo_user(request):
+	if request.user.is_authenticated:
+		return redirect('tasks')
+
+	user = authenticate(request, username='DemoUser', password='123456789Ss')
+	login(request, user)
+	return redirect('tasks')
 
 
 def about_page(request):

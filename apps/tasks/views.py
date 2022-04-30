@@ -1,5 +1,4 @@
 from datetime import timedelta
-from django.http import HttpRequest
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -12,23 +11,28 @@ from django.db.models import F
 from .external_APIs import *
 
 
-#scheduled deadline mail
-def deadline_mail(request,task):
-    
-    schedule('django.core.mail.send_mail',
-        'Your task is reaching a deadline!',
-        f'Please be sure to finish your {task.name} task before {task.deadline}',
-        'djnagotestmailkek@gmail.com',
-        [request.user.email],
-        schedule_type=Schedule.ONCE,
-        #След. или первое время запуска ф-ции
-        next_run=task.deadline - timedelta(days=3))
+# scheduled deadline mail
+def deadline_mail(request, task):
 
-#-------Отобразить все task--------
+    schedule('django.core.mail.send_mail',
+             'Your task is reaching a deadline!',
+             f'Please be sure to finish your {task.name} task before {task.deadline}',
+             'djnagotestmailkek@gmail.com',
+             [request.user.email],
+             schedule_type=Schedule.ONCE,
+             # След. или первое время запуска ф-ции
+             next_run=task.deadline - timedelta(days=3)
+             )
+    print(task.deadline - timedelta(days=3))
+
+
+
+# -------Отобразить все task--------
 @login_required
 def view_tasks(request):
-    #F класс помогает сортануть query,т.к в нем есть метод, сортирующий нулевые позиции в конец 
-    tasks = Task.objects.filter(created_by=request.user.id).order_by(F('deadline').desc(nulls_last=True))
+    # F класс помогает сортануть query,т.к в нем есть метод, сортирующий нулевые позиции в конец
+    tasks = Task.objects.filter(created_by=request.user.id).order_by(
+        F('deadline').desc(nulls_last=True))
 
     for task in tasks:
         if task.deadline:
@@ -39,13 +43,19 @@ def view_tasks(request):
                 elif timezone.now() - task.deadline >= timedelta(days=-3):
                     task.status = task.TaskCurrentStatus.DEADLINE
                     task.save()
+                else:
+                    task.status = task.TaskCurrentStatus.ACTIVE
+                    task.save()
 
-    #for production,else you need to use your local machine adress
-    users_ip = request.META.get('REMOTE_ADDR')
+    # GETTING IP ADRESS, THEN GEOCODER GETS LAT LONG
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        users_ip = x_forwarded_for.split(',')[0]
+    else:
+        users_ip = request.META.get('REMOTE_ADDR')
 
     all_weather_info = weather_api_call(users_ip)
     if type(all_weather_info) is not dict:
-    #if 'temperature' in weather_api_call():
         temperature = None
         feels_like = None
         wind = None
@@ -57,7 +67,6 @@ def view_tasks(request):
         wind = all_weather_info['wind']
         country_and_city = all_weather_info['country and city']
         icon_url = all_weather_info['icon_url']
-        
 
     currency_excgange = get_rubusd_rate()
     usd_rub = currency_excgange[0]
@@ -81,23 +90,26 @@ def view_tasks(request):
     }
     return render(request, 'tasks/tasks.html', context)
 
-#-------Отобразить определенный taks--------
+
+# -------Отобразить определенный taks--------
 @login_required
 def view_task(request, pk):
-    task = get_object_or_404(Task, id = pk)
+    task = get_object_or_404(Task, id=pk)
 
     if task.created_by == request.user:
-        return render(request, 'tasks/task.html', {'task':task, 'exchange_rate': get_rubusd_rate, 'weather': weather_api_call})
+        return render(request, 'tasks/task.html', {'task': task, 'exchange_rate': get_rubusd_rate, 'weather': weather_api_call})
     else:
         messages.error(request, 'You have no rights to view this task!')
         return redirect('tasks')
 
-#--------Создать task-=------
+# --------Создать task-=------
+
+
 @login_required
 def create_task(request):
-    #указываем форму
+    # указываем форму
     form = TaskForm(request.POST or None)
-    #чекаем правильность заполнения и сохраняем, если все ок
+    # чекаем правильность заполнения и сохраняем, если все ок
     if form.is_valid():
         task = form.save(commit=False)
         task.created_by = request.user
@@ -106,38 +118,55 @@ def create_task(request):
             deadline_mail(request, task)
         messages.success(request, 'Task was successfully created!')
         return redirect('tasks')
-    
-    
-    return render(request, 'tasks/create_task.html', {'form':form})
+    return render(request, 'tasks/create_task.html', {'form': form})
 
-#--------Изменить существующий task---------    
+
+# --------Изменить существующий task---------
 @login_required
 def change_task(request, pk):
-    task = get_object_or_404(Task, id = pk)
+    task = get_object_or_404(Task, id=pk)
     if task.created_by == request.user:
-        #чтобы изменить существующий объект, нужно передать форме параметр instance, с указанием объекта для изменений
-        #иначе джанго попытается с помощью формы создать новый объкт
+        # чтобы изменить существующий объект, нужно передать форме параметр instance, с указанием объекта для изменений
+        # иначе джанго попытается с помощью формы создать новый объкт
         form = ChangeTaskForm(request.POST or None, instance=task)
-        #у меня такое чувство, что пре-заполнение вышло очень грязным способом, !уточнить
         form.initial['name'] = task.name
         form.initial['description'] = task.description
-        form.initial['status'] = task.status
         form.initial['deadline'] = task.deadline
         if request.method == "POST":
             if form.is_valid():
-                form.save() 
+                form.save()
                 messages.success(request, 'Task was successfully changed!')
-                return redirect('task', pk = task.pk)
+                return redirect('task', pk=task.pk)
 
-        return render(request, 'tasks/create_task.html', {'form':form})
+        return render(request, 'tasks/create_task.html', {'form': form})
     else:
         messages.error(request, 'You have no rights to change this task!')
         return redirect('tasks')
-    
 
-#-------Завершить task-------
+
+#--------Поставить task на паузу---------        
+@login_required
+def pause_task(request, pk):
+    task = get_object_or_404(Task, id=pk)
+    if task.created_by == request.user:
+        if task.status == task.TaskCurrentStatus.PAUSED:
+            task.status = task.TaskCurrentStatus.ACTIVE
+            task.save()
+            messages.success(request, 'Task was successfully unpaused!')
+            return redirect('tasks')
+        else:
+            task.status = task.TaskCurrentStatus.PAUSED
+            task.save()
+            messages.success(request, 'Task was successfully paused!')
+            return redirect('tasks')
+    else:
+        messages.error(request, 'You have no rights to change this task!')
+        return redirect('tasks')
+
+
+# -------Завершить task-------
 def complete_task(request, pk):
-    task = get_object_or_404(Task, id = pk)
+    task = get_object_or_404(Task, id=pk)
     if task.created_by == request.user:
         task.status = task.TaskCurrentStatus.DONE
         task.save()
@@ -148,16 +177,14 @@ def complete_task(request, pk):
         messages.error(request, 'You have no rights to change this task!')
         return redirect('tasks')
 
-    
-#-------Удаление task-------
+
+# -------Удаление task-------
 @login_required
 def delete_task(request, pk):
-    task = get_object_or_404(Task, id = pk)
+    task = get_object_or_404(Task, id=pk)
     if request.user == task.created_by:
         task.delete()
         messages.success(request, 'Task was deleted!')
         return redirect('tasks')
     messages.error(request, "This is not your task!")
     return redirect('tasks')
-
-

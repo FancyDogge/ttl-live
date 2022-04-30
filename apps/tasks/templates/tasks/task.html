@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 
+{% block title %}{{task.name}} Task{% endblock title %}
 
 {% block content %}
 <div class="row d-flex justify-content-center container">
@@ -24,8 +25,17 @@
       </div>
       <div class="d-block text-right card-footer">
         <a class="btn btn-secondary" href="{% url 'tasks' %}">Back to Tasks</a>
-        <a class='btn btn-warning' href="{% url 'change_task' task.id %}">Change Task</a>
-        <a class='btn btn-danger' href="{% url 'delete_task' task.id %}">Delete Task</a>
+        <a class='btn btn-info' href="{% url 'change_task' task.id %}">Change</a>
+        <a class='btn btn-warning' href="{% url 'pause_task' task.id %}">
+          
+          {% if task.status == 'Paused' %}
+            Unpause
+          {% else %}
+            Pause
+          {% endif %}
+            
+        </a>
+        <a class='btn btn-danger' href="{% url 'delete_task' task.id %}">Delete</a>
       </div> 
     </div>
   </div>
