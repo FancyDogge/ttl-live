@@ -13,9 +13,10 @@ Project is created with dajngo and django-q library, check out requirements.txt 
 	
 ## Setup
 To run this project, clone it and make sure you're in its directory.
-Then you should make and apply migrations:
+Then you should install requirements, make and apply migrations:
 
 ```
+pip install -r requirements.txt
 py manage.py makemigrations
 py manage.py migrate
 ```
