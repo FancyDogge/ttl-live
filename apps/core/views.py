@@ -37,11 +37,11 @@ def register_user(request):
 		user = form.save()
 
 		#создание юзерпрофиля с аватаркой
-		user_profile = Userprofile.objects.create(
-			user=user,
-			avatar='uploads/avatars/default.jpg'
-		)
-		user_profile.save()
+		# user_profile = Userprofile.objects.create(
+		# 	user=user,
+		# 	avatar='uploads/avatars/default.jpg'
+		# )
+		# user_profile.save()
 
 		login(request, user)
 		send_registration_email(user)

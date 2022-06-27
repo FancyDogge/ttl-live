@@ -29,9 +29,9 @@ def dashboard_view(request):
 #-------Профиль------
 @login_required
 def userprofile(request):
-    user = get_object_or_404(User, id=request.user.id)
+    # user = get_object_or_404(User, id=request.user.id)
 
-    user_profile = get_object_or_404(Userprofile, user=user)
+    user_profile = get_object_or_404(Userprofile, user=request.user)
     
     #если в форме есть файлы, нужно это прописать
     form = UpdateAvatar(request.POST or None, request.FILES)
@@ -44,4 +44,4 @@ def userprofile(request):
             return redirect('userprofile')
 
 
-    return render(request, 'dashboard/profile_page.html', {'user':user, 'form':form})
+    return render(request, 'dashboard/profile_page.html', {'user':request.user, 'form':form})
