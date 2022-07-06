@@ -27,7 +27,7 @@ After that you should create superuser if you want an admin account
 py manage.py createsuperuser
 ```
 
-When you're done, run qcluster in one terminal
+When you're done, run qcluster(library for background tasks) in one terminal
 
 ```
 py manage.py qcluster
