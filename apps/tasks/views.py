@@ -102,9 +102,8 @@ def view_task(request, pk):
         messages.error(request, 'You have no rights to view this task!')
         return redirect('tasks')
 
+    
 # --------Создать task-=------
-
-
 @login_required
 def create_task(request):
     # указываем форму
